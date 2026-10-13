@@ -1,0 +1,12 @@
+{
+  "p1": {
+    "name": "Shoes",
+    "price": 999,
+    "stock": 5
+  },
+  "p2": {
+    "name": "Shirt",
+    "price": 499,
+    "stock": 0
+  }
+}
