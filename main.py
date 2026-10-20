@@ -1,31 +1,42 @@
-from fastapi import FastAPI
 
-app = FastAPI(title="FoodRush API", version="0.1.0")
+# from fastapi import FastAPI
+
+# app = FastAPI()
+
+# @app.get("/restaurants")
+# def get_restaurants():
+#     return ["Spice Garden", "Pizza Point"] 
+
+# @app.get("/")
+# def home():
+#     return {"message":"Welcome to FoodRush"}
+
+# @app.get("/about")
+# def about():
+#     return {"app":"FoodRush","Version":1} 
+
+
+from fastapi import FastAPI, HTTPException
+
+app = FastAPI()
+
+restaruants = {
+    1: {"id":1, "name":"Spicy Garden","cusine":"indian"},
+    2: {"id":2, "name":"Pizza Point","cusine":"italian"},
+} 
 
 @app.get("/")
-def root():
-    return {"message":"Welcome to FoodRush API"}
-
-@app.get("/health")
-def health():
-    return {"Status":"ok"}
-
-@app.get("/products/{product_id}")
-def get_product(product_id: int):
-    return {"product_id":product_id, "name":"sample product"}
+def home():
+    return {"message":"Welcome to foodRush"}
 
 
-@app.get("/search")
-def search(q:str, limit:int = 10):
-    return {"query":q, "limit":limit} 
+@app.get("/restaurants")
+def get_restaurant():
+    return list(restaruants.values())   
 
-from pydantic import BaseModel, Field
-
-class ProductCreate(BaseModel):
-    name: str = Field(min_length=2, max_length=100)
-    price: int = Field(gt=0)
-    stock: int = Field(ge=0)
-
-@app.post("/products", status_code=201)
-def create_product(data: ProductCreate):
-    return {"message": "created", "product": data.model_dump()}
+@app.get("/restaurants/{restaruant_id}") 
+def get_restaurant(restaruant_id:int):
+    restaurant = restaruants.get(restaruant_id)
+    if restaurant is None:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    return restaurant
